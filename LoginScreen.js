@@ -6,10 +6,24 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    // Add your form handling logic here (e.g., form validation and API calls).
-    // For simplicity, we'll just display the entered email and password in an alert.
-    const message = `Email: ${email}\nPassword: ${password}`;
-    Alert.alert("Login Information", message);
+    if (validateInputs()) {
+      // Add your form handling logic here (e.g., API calls for login).
+      const message = `Email: ${email}\nPassword: ${password}`;
+      Alert.alert("Login Information", message);
+    }
+  };
+
+  const validateInputs = () => {
+    // Basic email format validation using a regular expression.
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !password) {
+      Alert.alert("Error", "Email and password are required.");
+      return false;
+    } else if (!emailRegex.test(email)) {
+      Alert.alert("Error", "Please enter a valid email address.");
+      return false;
+    }
+    return true;
   };
 
   return (
