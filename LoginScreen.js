@@ -1,14 +1,16 @@
+import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
-import { View, TextInput, Button, Alert, StyleSheet } from "react-native";
+import { Alert, Button, StyleSheet, TextInput, View } from "react-native";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("USA");
 
   const handleLogin = () => {
     if (validateInputs()) {
       // Add your form handling logic here (e.g., API calls for login).
-      const message = `Email: ${email}\nPassword: ${password}`;
+      const message = `Email: ${email}\nPassword: ${password}\nCountry: ${selectedCountry}`;
       Alert.alert("Login Information", message);
     }
   };
@@ -17,7 +19,7 @@ const LoginScreen = () => {
     // Basic email format validation using a regular expression.
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !password) {
-      Alert.alert("Error", "Email and password are required.");
+      Alert.alert("Error", "Email, password, and country are required.");
       return false;
     } else if (!emailRegex.test(email)) {
       Alert.alert("Error", "Please enter a valid email address.");
@@ -43,6 +45,16 @@ const LoginScreen = () => {
         value={password}
         secureTextEntry
       />
+      <Picker
+        style={styles.picker}
+        selectedValue={selectedCountry}
+        onValueChange={(itemValue) => setSelectedCountry(itemValue)}
+      >
+        <Picker.Item label="USA" value="USA" />
+        <Picker.Item label="Canada" value="Canada" />
+        <Picker.Item label="UK" value="UK" />
+        <Picker.Item label="Australia" value="Australia" />
+      </Picker>
       <Button title="Login" onPress={handleLogin} />
     </View>
   );
@@ -60,6 +72,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+  },
+  picker: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
   },
 });
 
