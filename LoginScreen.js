@@ -1,5 +1,7 @@
 import { Picker } from "@react-native-picker/picker";
 import Checkbox from "expo-checkbox";
+// Other imports
+import { useNavigation } from "@react-navigation/native";
 
 import React, { useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
@@ -9,6 +11,7 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("USA");
   const [isChecked, setChecked] = useState(false);
+  const navigation = useNavigation();
 
   const handleLogin = () => {
     if (validateInputs()) {
@@ -16,18 +19,28 @@ const LoginScreen = () => {
       const message = `Email: ${email}\nPassword: ${password}\nCountry: ${selectedCountry}\nAccept Terms: ${
         isChecked ? "Yes" : "No"
       }`;
-      Alert.alert("Login Information", message);
+    //   Alert.alert("Login Information", message);
+      navigation.navigate("Profile", {
+        email,
+        selectedCountry,
+        isChecked,
+      });
     }
   };
 
   const validateInputs = () => {
     // Basic email format validation using a regular expression.
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
     if (!email || !password || !isChecked) {
       Alert.alert("Error", "Please fill all the fields and accept the terms.");
       return false;
     } else if (!emailRegex.test(email)) {
       Alert.alert("Error", "Please enter a valid email address.");
+      return false;
+    } else if(!passwordRegex.test(password)){
+        Alert.alert("Error", " The password must required eight characters, at least one uppercase letter, one lowercase letter, one number and one special character");
       return false;
     }
     return true;
