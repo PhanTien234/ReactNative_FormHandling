@@ -1,16 +1,21 @@
 import { Picker } from "@react-native-picker/picker";
+import Checkbox from "expo-checkbox";
+
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, TextInput, View } from "react-native";
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("USA");
+  const [isChecked, setChecked] = useState(false);
 
   const handleLogin = () => {
     if (validateInputs()) {
       // Add your form handling logic here (e.g., API calls for login).
-      const message = `Email: ${email}\nPassword: ${password}\nCountry: ${selectedCountry}`;
+      const message = `Email: ${email}\nPassword: ${password}\nCountry: ${selectedCountry}\nAccept Terms: ${
+        isChecked ? "Yes" : "No"
+      }`;
       Alert.alert("Login Information", message);
     }
   };
@@ -18,8 +23,8 @@ const LoginScreen = () => {
   const validateInputs = () => {
     // Basic email format validation using a regular expression.
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email || !password) {
-      Alert.alert("Error", "Email, password, and country are required.");
+    if (!email || !password || !isChecked) {
+      Alert.alert("Error", "Please fill all the fields and accept the terms.");
       return false;
     } else if (!emailRegex.test(email)) {
       Alert.alert("Error", "Please enter a valid email address.");
@@ -55,6 +60,10 @@ const LoginScreen = () => {
         <Picker.Item label="UK" value="UK" />
         <Picker.Item label="Australia" value="Australia" />
       </Picker>
+      <View style={styles.checkboxContainer}>
+        <Checkbox value={isChecked} onValueChange={setChecked} />
+        <Text style={styles.label}>I accept the terms and conditions</Text>
+      </View>
       <Button title="Login" onPress={handleLogin} />
     </View>
   );
@@ -77,6 +86,14 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  label: {
+    marginLeft: 8,
   },
 });
 
